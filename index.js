@@ -129,14 +129,13 @@ function fDelete(call, callback) {
     try {
         var dir = __dirname + `/functions/${call.request.userId}/${call.request.fName}`
         exec(`rm -rf ${dir}`, function (err, stdout, stderr) {
-            console.log(stdout, 'Done: Deleted '+ dir);
+            console.log(stdout, 'Done: Deleted ' + dir);
             callback(null, { status: 'Success' });
         })
     }
     catch (err) {
-        callback(null, { status: 'Failed'});
+        callback(null, { status: 'Failed' });
     }
-
 }
 
 
