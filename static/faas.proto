@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.faas";
+option java_outer_classname = "FaasProto";
+option objc_class_prefix = "HLW";
+
+package faas;
+
+// The greeting service definition.
+service Faas {
+  rpc fCreate (createM) returns (createR) {}
+  rpc fCall (callM) returns (callR) {}
+}
+
+message createM {
+  string userId = 1;
+  string fName = 2;
+  string code = 3;
+}
+
+message callM {
+  string userId = 1;
+  string fName = 2;
+  repeated string param = 3;
+}
+
+message createR {
+  string status = 1;
+}
+
+message callR {
+  string status = 1;
+  string result = 2;
+}
+
