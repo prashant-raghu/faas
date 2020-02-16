@@ -11,6 +11,7 @@ package faas;
 service Faas {
   rpc fCreate (createM) returns (createR) {}
   rpc fCall (callM) returns (callR) {}
+  rpc fDelete (deleteM) returns (deleteR){}
 }
 
 message createM {
@@ -25,6 +26,11 @@ message callM {
   repeated string param = 3;
 }
 
+message deleteM {
+  string userId = 1;
+  string fName = 2;
+}
+
 message createR {
   string status = 1;
 }
@@ -33,4 +39,9 @@ message callR {
   string status = 1;
   string result = 2;
 }
+
+message deleteR {
+  string status = 1;
+}
+
 
