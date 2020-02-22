@@ -1,0 +1,45 @@
+<style src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"></style>
+<style>
+            .codeflask {
+    position: relative;
+    width: 100%;
+    height: 50vh !important;
+    overflow: scroll;
+  }
+</style>
+<div class="col-md-12 row">
+
+    <div class="col-md-12 row" style="" id="editor1"></div>
+    <p><br></p>
+    <div>
+
+        <div class="col-md-12 " style="overflow-y: scroll;" id="editor2"></div>
+        <p><br></p>
+
+    </div>
+    <div class="col-md-12 row" style="margin-top: 45vh !important" id="editor3"></div>
+
+</div>
+<script src="https://unpkg.com/codeflask/build/codeflask.min.js"></script>
+<script>
+
+    const flask1 = new CodeFlask('#editor1', {
+        language: 'js',
+        readonly: true
+    });
+
+    flask1.updateCode('function name(param1, param2, param3){');
+    const flask2 = new CodeFlask('#editor2', {
+        language: 'js',
+        lineNumbers: true
+        // defaultTheme: false
+    });
+
+    const flask3 = new CodeFlask('#editor3', {
+        language: 'js',
+        readonly: true
+    });
+
+    flask3.updateCode(`}
+    console.log(name())`);
+</script>
