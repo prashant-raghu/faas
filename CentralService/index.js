@@ -91,6 +91,7 @@ function main() {
     })
   })
   app.post('/function/show', (req, res) => {
+	console.log(req.body)
     var token = req.body.token;
     request.get({
       headers: {
