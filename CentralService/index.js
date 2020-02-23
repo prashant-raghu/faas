@@ -5,10 +5,12 @@ const express = require('express')
 const app = express()
 const port = 3000
 var request = require('request');
+var cors = require('cors')
 var grpc = require('grpc');
 var protoLoader = require('@grpc/proto-loader');
 var bodyParser = require('body-parser')
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 var packageDefinition = protoLoader.loadSync(
