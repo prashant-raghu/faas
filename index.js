@@ -3,6 +3,7 @@ var exec = require('child_process').exec;
 const fs = require('fs');
 var PROTO_PATH = __dirname + '/static/faas.proto';
 var grpc = require('grpc');
+const { readdirSync } = require('fs')
 var protoLoader = require('@grpc/proto-loader');
 var packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
@@ -114,11 +115,35 @@ function fDelete(call, callback) {
         callback(null, { status: 'Failed' });
     }
 }
+function fshow(call, callback) {
+    //userid
+    try {
+        var res = [];
+        var source = __dirname + '/functions/' + call.request.userId;
+        fs.readdir(source, function (err, items) {
+            console.log(items);
+            for (var i = 0; i < items.length; i++) {
+                var temp = {
+                    name: items[i],
+                    code: fs.readFileSync(source +'/'+ items[i]+'/index.js', "utf8")
+                }
+                res.push(temp);
+                console.log(items[i]);
+            }
 
+            console.log(res);
+            callback(null, { result: JSON.stringify(res) });
+        });
+    }
+    catch (err) {
+        console.log(err);
+        callback(null, { result: 'Failed' })
+    }
+}
 
 function main() {
     var server = new grpc.Server();
-    server.addService(faas_proto.Faas.service, { fCreate: fCreate, fCall: fCall, fDelete: fDelete });
+    server.addService(faas_proto.Faas.service, { fCreate: fCreate, fCall: fCall, fDelete: fDelete, fshow: fshow });
     server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
     server.start();
 }

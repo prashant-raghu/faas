@@ -12,6 +12,7 @@ service Faas {
   rpc fCreate (createM) returns (createR) {}
   rpc fCall (callM) returns (callR) {}
   rpc fDelete (deleteM) returns (deleteR){}
+  rpc fshow (showM) returns (showR){}
 }
 
 message createM {
@@ -44,4 +45,9 @@ message deleteR {
   string status = 1;
 }
 
-
+message showM{
+  string userId = 1;
+}
+message showR {
+  string result = 1;
+}

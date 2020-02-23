@@ -5,9 +5,10 @@ import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
-
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 app_settings = os.getenv(
     'APP_SETTINGS',
     'project.server.config.DevelopmentConfig'
