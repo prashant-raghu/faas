@@ -1,0 +1,3 @@
+sudo apt-get update
+sudo apt-get install memcached
+sudo apt-get install libmemcached-tools
