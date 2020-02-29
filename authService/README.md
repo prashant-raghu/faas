@@ -3,7 +3,7 @@
 ### Run the Application
 
 ```sh
-$ python manage.py runserver -h 0.0.0.0 -p 8080
+$ python3 manage.py runserver -h 0.0.0.0 -p 8080
 ```
 
 ```sh
