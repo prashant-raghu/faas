@@ -24,26 +24,10 @@ var packageDefinition = protoLoader.loadSync(
   });
 var faas_proto = grpc.loadPackageDefinition(packageDefinition).faas;
 var auth = 'http://54.81.215.99:8080/'
+var cache = 'http://54.81.215.99:8090/'
 function main() {
   var client = new faas_proto.Faas('localhost:50051',
     grpc.credentials.createInsecure());
-
-  var code = `
-  var express = require('express') 
-  var express2 = require('grpc')
-  var express3 = require("lodash")
-  console.log('I am running from sample!!')
-  // while(true){}`
-
-  // client.fCreate({userId: 'uidxxxx', fName: 'init', code: code}, function(err, response){
-  //   console.log('Server response: ', response);
-  // })
-  // client.fDelete({userId: 'uidxxxx', fName: 'init'}, function(err, response){
-  //   console.log('Server response: ', response);
-  // })
-  // client.fCall({userId: 'uidxxxx', fName: 'init', param: ["p1","p2","p3"]}, function(err, response){
-  //   console.log('Server response: ', response);
-  // })
 
   app.get('/', (req, res) => res.send('Central Service for faas!'))
   app.post('/function/create', (req, res) => {
@@ -85,13 +69,41 @@ function main() {
   })
   app.post('/function/call', (req, res) => {
     var fName = req.body.fName;
-    client.fCall({ userId: req.body.userid, fName: req.body.fName, param: req.body.param }, function (err, response) {
-      console.log('Server response: ', response);
-      res.send(response);
+    //from cache
+    request.post(cache + 'getCache', {
+      json: {
+        user_id: req.body.userid,
+        fName: req.body.fName,
+      }
+    }, (error, res, body) => {
+      if (error) {
+        res.send(error);
+      }
+      else if (body != "Failed") {
+        res.send(body);
+      }
+      else {
+        client.fCall({ userId: req.body.userid, fName: req.body.fName, param: req.body.param }, function (err, response) {
+          console.log('Server response: ', response);
+          request.post(cache + 'setCache', {
+            json: {
+              user_id: req.body.userid,
+              fName: req.body.fName,
+              fRes: response
+            }
+          }, (error, res, body) => {
+            if (error) {
+              res.send(error)
+            }
+          })
+          res.send(response);
+        })
+      }
+      console.log(body)
     })
   })
   app.post('/function/show', (req, res) => {
-	console.log(req.body)
+    console.log(req.body)
     var token = req.body.token;
     request.get({
       headers: {
@@ -102,15 +114,28 @@ function main() {
     }, function (error, response, body) {
       console.log(body);
       body = JSON.parse(body);
-      client.fshow({ userId: body.data.user_id}, function (err, response) {
+      client.fshow({ userId: body.data.user_id }, function (err, response) {
         console.log('Server response: ', response);
         res.send(response);
       })
     });
   })
-  
+
 
   app.listen(port, () => console.log(`Central Service for faas app listening on port ${port}!`))
 }
 
 main();
+module.exports = app
+
+
+  // gRPC Calls Backup
+  // client.fCreate({userId: 'uidxxxx', fName: 'init', code: code}, function(err, response){
+  //   console.log('Server response: ', response);
+  // })
+  // client.fDelete({userId: 'uidxxxx', fName: 'init'}, function(err, response){
+  //   console.log('Server response: ', response);
+  // })
+  // client.fCall({userId: 'uidxxxx', fName: 'init', param: ["p1","p2","p3"]}, function(err, response){
+  //   console.log('Server response: ', response);
+  // })

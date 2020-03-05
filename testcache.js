@@ -1,7 +1,7 @@
 var request = require('request');
 
 function get(){
-    request.post('http://127.0.0.1:8090/getCache', {
+    request.post('http://54.81.215.99:8090/getCache', {
         json: {
             user_id: "4",
             fName: "functionName2",
@@ -15,7 +15,7 @@ function get(){
     })
 }
 function set(result) {
-    request.post('http://127.0.0.1:8090/setCache', {
+    request.post('http://54.81.215.99:8090/setCache', {
         json: {
             user_id: "4",
             fName: "functionName2",
@@ -30,5 +30,5 @@ function set(result) {
       })
 }
 
-set("Result has not been set");
+// set("Result has been set");
 get();
